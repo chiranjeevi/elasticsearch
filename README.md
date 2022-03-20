@@ -25,3 +25,6 @@ Run the below command to start filebeat service
 Observe for below line in logs to see sucessfull connection to AWS ES
 `[publisher_pipeline_output]     pipeline/output.go:151  Connection to backoff(elasticsearch(https://search-xxxx-n2p2gwbr5xybaqw37cdqxb4yqy.us-east-1.es.amazonaws.com:443)) established
 `
+- To create an index manually with curl 
+`curl -XPUT -u 'master-user:master-user-password' 'domain-endpoint/movies/_doc/1' -d '{"director": "Burton, Tim", "genre": ["Comedy","Sci-Fi"], "year": 1996, "actor": ["Jack Nicholson","Pierce Brosnan","Sarah Jessica Parker"], "title": "Mars Attacks!"}' -H 'Content-Type: application/json'
+`
