@@ -11,17 +11,6 @@ data "aws_ami" "ec2" {
 
 }
 
-/*
-data "template_file" "userdata_web" {
-  template = file("userdata_web.sh")
-  vars = {
-    port      = "3000",
-    api_host  = "http://${aws_lb.external-alb.dns_name}:8080",
-    log_group = aws_cloudwatch_log_group.devops_log.name
-  }
-}
-
-*/
 resource "aws_iam_role" "elasticsearch_ec2_role" {
   name = "elasticsearch_ec2_role"
 
@@ -41,7 +30,7 @@ resource "aws_iam_role" "elasticsearch_ec2_role" {
 }
 EOF
   tags = {
-    Name    = "Devops 3TierApp"
+    Name    = "ES ec2 role"
     version = var.infra_version
   }
 }
@@ -91,8 +80,18 @@ resource "aws_iam_role_policy" "elasticsearch_ec2_policy" {
 EOF
 }
 
+data "template_file" "es_instance" {
+   depends_on = [
+    aws_elasticsearch_domain.es_cluster,
+  ]
+  template = file("es_userdata.sh")
+  vars = {
+    es_cluster = aws_elasticsearch_domain.es_cluster.domain_name
+  }
+}
 
 resource "aws_instance" "elasticsearch-instance" {
+  
   ami           = data.aws_ami.ec2.id
   instance_type = "t2.small"
   key_name      = var.key_name
@@ -100,7 +99,7 @@ resource "aws_instance" "elasticsearch-instance" {
   vpc_security_group_ids      = ["${aws_security_group.sg_allow_ssh_elasticsearch.id}"]
   subnet_id                   = aws_subnet.pub-subnet-1.id
   iam_instance_profile        = aws_iam_instance_profile.elasticsearch_ec2_profile.name
-  #user_data                   = base64encode(data.template_file.elasticsearch.rendered)
+  user_data                   = base64encode(data.template_file.es_instance.rendered)
   associate_public_ip_address = true
   tags = {
     Name    = "Elasticsearch ec2"
@@ -145,7 +144,7 @@ resource "aws_security_group" "sg_allow_ssh_elasticsearch" {
   }
 }
 
-output "elasticsearch_ip_address" {
+output "es_filebeat_ip_address" {
   value = aws_instance.elasticsearch-instance.public_ip
 }
 
@@ -156,5 +155,42 @@ resource "aws_cloudwatch_log_group" "devops_log" {
   tags = {
     Name    = "Elasticsearch loggroup"
     version = var.infra_version
+  }
+}
+
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
+
+resource "aws_elasticsearch_domain" "es_cluster" {
+  domain_name           = var.domain
+  elasticsearch_version = "7.10"
+
+  ebs_options{
+        ebs_enabled = true
+        volume_size = 10
+    }
+  cluster_config {
+    instance_type = "t2.small.elasticsearch"
+  }
+  access_policies = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "es:*",
+      "Principal": "*",
+      "Effect": "Allow",
+      "Resource": "arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/${var.domain}/*",
+      "Condition": {
+        "IpAddress": {"aws:SourceIp": ["${var.pub_subnet_cidr_1}"]}
+      }
+    }
+  ]
+}
+POLICY
+  tags = {
+    Domain = "TestDomain"
   }
 }

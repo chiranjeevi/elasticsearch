@@ -33,3 +33,6 @@ variable "key_name" {
 variable "infra_version" {
   default = "1.0.0"
 }
+variable "domain" {
+  default = "test"
+}
