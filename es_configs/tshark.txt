@@ -1,0 +1,1 @@
+tshark -r packetbeat-7.12.1-linux-x86_64/archivo.pcap   -T ek -l -c 55 | grep -v \"_index\"\: >  pcap/5pcapjson.json

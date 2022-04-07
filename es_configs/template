@@ -1,0 +1,73 @@
+PUT _index_template/mytemp
+{
+      "index_patterns" : [
+          "map6*"
+        ],
+        "template" : {
+          "settings" : { },
+          "mappings" : {
+            "properties" : {
+              "srcgeo" : {
+                "type" : "object",
+                "properties" : {
+                  "location" : {
+                    "type" : "geo_point"
+                  },
+                    "ip": {
+                    "type": "ip"
+                  },
+                  "latitude": {
+                    "type": "half_float"
+                  },
+                  
+                  "longitude": {
+                    "type": "half_float"
+                  }
+                }
+              },
+			 "destgeo" : {
+                "type" : "object",
+                "properties" : {
+                  "location" : {
+                    "type" : "geo_point"
+                  },
+                    "ip": {
+                    "type": "ip"
+                  },
+                  "latitude": {
+                    "type": "half_float"
+                  },
+                  
+                  "longitude": {
+                    "type": "half_float"
+                  }
+                }
+              },
+              "source.ip":{
+                "type" : "ip"
+              },
+              "destination.ip":{
+                "type" : "ip"
+              },
+              "source.port":{
+                "type" : "integer"
+              },
+              "dest.port":{
+                "type" : "integer"
+              },
+              "netowork.protocol":{
+                "type" : "text"
+              }
+              
+            }
+          }
+        },
+        "composed_of" : [ ],
+        "priority" : 51,
+        "version" : 1,
+        "_meta" : {
+          "description" : "my custom"
+        }
+}
+
+
