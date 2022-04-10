@@ -39,3 +39,6 @@ start service
 
 
 ./packetbeat -e -c packetbeat.yml  -I archivo.pcap -d "publish"
+#----- Install tshark----
+apt-get install wireshark
+tshark --help
