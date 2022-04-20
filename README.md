@@ -1,7 +1,9 @@
 # elasticsearch
 Setup AWS ES with filebeat to push logs
 
-- Create an AWS ES and an EC2 instance
+- Create an AWS ES and an EC2 instance with the help of terraform
+  `terraform apply -var AWS_ACCESS_KEY_ID=<ACCESSKEY> -var AWS_SECRET_ACCESS_KEY=<SECRETKEY> -var AWS_DEFAULT_REGION=us-east-1`
+
 - Created an AWS ES cluster with public and allowed access to given below EC2 instance to avoid authentication/authorization setup, but make sure you setup prod grade with SAML/Cognito authentication
 - Install filebeat on EC2 and push the logs to AWS ES without logstash
 - Versions used:

@@ -1,73 +1,83 @@
-PUT _index_template/mytemp
+PUT _index_template/branchcode2021
 {
-      "index_patterns" : [
-          "map6*"
-        ],
-        "template" : {
-          "settings" : { },
-          "mappings" : {
+  "index_patterns" : [
+      "branchcode2021*"
+    ],
+    "template" : {
+      "settings" : { },
+      "mappings" : {
+        "properties" : {
+          "srcgeo" : {
+            "type" : "object",
             "properties" : {
-              "srcgeo" : {
-                "type" : "object",
-                "properties" : {
-                  "location" : {
-                    "type" : "geo_point"
-                  },
-                    "ip": {
-                    "type": "ip"
-                  },
-                  "latitude": {
-                    "type": "half_float"
-                  },
-                  
-                  "longitude": {
-                    "type": "half_float"
-                  }
-                }
+              "location" : {
+                "type" : "geo_point"
               },
-			 "destgeo" : {
-                "type" : "object",
-                "properties" : {
-                  "location" : {
-                    "type" : "geo_point"
-                  },
-                    "ip": {
-                    "type": "ip"
-                  },
-                  "latitude": {
-                    "type": "half_float"
-                  },
-                  
-                  "longitude": {
-                    "type": "half_float"
-                  }
-                }
+                "ip": {
+                "type": "ip"
               },
-              "source.ip":{
-                "type" : "ip"
+              "latitude": {
+                "type": "half_float"
               },
-              "destination.ip":{
-                "type" : "ip"
-              },
-              "source.port":{
-                "type" : "integer"
-              },
-              "dest.port":{
-                "type" : "integer"
-              },
-              "netowork.protocol":{
-                "type" : "text"
-              }
               
+              "longitude": {
+                "type": "half_float"
+              }
             }
+          },
+   "destgeo" : {
+            "type" : "object",
+            "properties" : {
+              "location" : {
+                "type" : "geo_point"
+              },
+                "ip": {
+                "type": "ip"
+              },
+              "latitude": {
+                "type": "half_float"
+              },
+              
+              "longitude": {
+                "type": "half_float"
+              }
+            }
+          },
+          "source.ip":{
+            "type" : "ip"
+          },
+          "destination.ip":{
+            "type" : "ip"
+          },
+          "source.port":{
+            "type" : "integer"
+          },
+          "dest.port":{
+            "type" : "integer"
+          },
+          "netowork.protocol":{
+            "type" : "keyword"
+          },
+          "source.branch":{
+            "type" : "keyword"
+          },
+          "destination.branch":{
+            "type" : "keyword"
+          },
+          "src.branch.type":{
+            "type" : "keyword"
+          },
+          "dest.branch.type":{
+            "type" : "keyword"
           }
-        },
-        "composed_of" : [ ],
-        "priority" : 51,
-        "version" : 1,
-        "_meta" : {
-          "description" : "my custom"
+          
         }
+      }
+    },
+    "composed_of" : [ ],
+    "priority" : 51,
+    "version" : 1,
+    "_meta" : {
+      "description" : "my custom"
+    }
 }
-
-

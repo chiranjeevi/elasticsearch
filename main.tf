@@ -12,7 +12,7 @@ data "aws_ami" "ec2" {
 }
 
 resource "aws_iam_role" "elasticsearch_ec2_role" {
-  name = "elasticsearch_ec2_role"
+  name = "${terraform.workspace}_elasticsearch_ec2_role"
 
   assume_role_policy = <<EOF
 {
@@ -36,12 +36,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "elasticsearch_ec2_profile" {
-  name = "elasticsearch_ec2_profile"
+  name = "${terraform.workspace}_elasticsearch_ec2_profile"
   role = aws_iam_role.elasticsearch_ec2_role.name
 }
 
 resource "aws_iam_role_policy" "elasticsearch_ec2_policy" {
-  name = "elasticsearch_ec2_policy"
+  name = "${terraform.workspace}_elasticsearch_ec2_policy"
   role = aws_iam_role.elasticsearch_ec2_role.id
 
   policy = <<EOF
@@ -89,7 +89,7 @@ data "template_file" "es_instance" {
     es_cluster = aws_elasticsearch_domain.es_cluster.domain_name
   }
 }
-
+/*
 resource "aws_instance" "elasticsearch-instance" {
   
   ami           = data.aws_ami.ec2.id
@@ -105,11 +105,11 @@ resource "aws_instance" "elasticsearch-instance" {
     Name    = "Elasticsearch ec2"
     version = var.infra_version
   }
-}
+}*/
 
 
 resource "aws_security_group" "sg_allow_ssh_elasticsearch" {
-  name        = "allow_ssh_elasticsearch"
+  name        = "${terraform.workspace}_allow_ssh_elasticsearch"
   description = "Allow SSH and elasticsearch inbound traffic"
   vpc_id      = aws_vpc.devops_vpc.id
 
@@ -164,7 +164,7 @@ data "aws_caller_identity" "current" {}
 
 
 resource "aws_elasticsearch_domain" "es_cluster" {
-  domain_name           = var.domain
+  domain_name           = "${terraform.workspace}-${var.domain}"
   elasticsearch_version = "7.10"
 
   ebs_options{
@@ -172,7 +172,7 @@ resource "aws_elasticsearch_domain" "es_cluster" {
         volume_size = 10
     }
   cluster_config {
-    instance_type = "t2.small.elasticsearch"
+    instance_type = "t3.medium.elasticsearch"
   }
   access_policies = <<POLICY
 {
