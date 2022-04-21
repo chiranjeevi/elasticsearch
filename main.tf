@@ -143,10 +143,10 @@ resource "aws_security_group" "sg_allow_ssh_elasticsearch" {
     version = var.infra_version
   }
 }
-
+/*
 output "es_filebeat_ip_address" {
   value = aws_instance.elasticsearch-instance.public_ip
-}
+} */
 
 
 resource "aws_cloudwatch_log_group" "devops_log" {

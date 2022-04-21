@@ -2,7 +2,12 @@
 Setup AWS ES with filebeat to push logs
 
 - Create an AWS ES and an EC2 instance with the help of terraform
+  `terrafom init`
   `terraform apply -var AWS_ACCESS_KEY_ID=<ACCESSKEY> -var AWS_SECRET_ACCESS_KEY=<SECRETKEY> -var AWS_DEFAULT_REGION=us-east-1`
+- To destroy the cluster
+  `terraform destroy -var AWS_ACCESS_KEY_ID=<ACCESSKEY> -var AWS_SECRET_ACCESS_KEY=<SECRETKEY> -var AWS_DEFAULT_REGION=us-east-1`
+
+- Once the cluster is up and running add the public ip of the host where it needs to be accessed under secuity configurations of ES cluster
 
 - Created an AWS ES cluster with public and allowed access to given below EC2 instance to avoid authentication/authorization setup, but make sure you setup prod grade with SAML/Cognito authentication
 - Install filebeat on EC2 and push the logs to AWS ES without logstash
